@@ -22,22 +22,24 @@ DCMD="$*"
 # Docker run cmd part
 ###############################
 DRUNCMD="docker run "
+DWORKDIR="/ws/$(basename $(pwd))"
 DOPTIONS=" -it --rm "
 # privilege and network
 DOPTIONS+=" --privileged --network host "
 
 # work dir, see mount ws below
-DOPTIONS+=" -w=/ws "
+DOPTIONS+=" -w=${DWORKDIR} "
 
 # overwrite entrypoint with customed envsetup.sh
 DOPTIONS+=" --entrypoint=/tmp/envsetup.sh "
+
 
 # GPU
 #DOPTIONS+=" --gpus all "
 
 # Container name
 CONTAINER_NAME=$(hostname)-$DBASEIMAGE
-DOPTIONS+=" --name $CONTAINER_NAME --hostname $CONTAINER_NAME --add-host $CONTAINER_NAME:127.0.0.1 "
+DOPTIONS+=" --hostname $CONTAINER_NAME --add-host $CONTAINER_NAME:127.0.0.1 "
 
 # user and group info
 #DOPTIONS+=" --user $(id -u):$(id -g) "
@@ -49,7 +51,8 @@ DOPTIONS+=" -e TERM=xterm-color "
 # mount options
 DOPTIONS+=" -v $HOME:$HOME "
 DOPTIONS+=" -v $SCRIPT_DIR/docker-run-envsetup.sh:/tmp/envsetup.sh "
-DOPTIONS+=" -v $(pwd):/ws "
+DOPTIONS+=" -v $(pwd):${DWORKDIR} "
+
 
 # get the docker run cmd
 DOCKER_RUN_CMD="$DRUNCMD $DOPTIONS $DIMAGE $DCMD"

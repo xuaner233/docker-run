@@ -18,7 +18,7 @@ if [ -n "$DGROUP" ]; then
 fi
 
 # Check if 'sudo' command is installed
-if [ ! command -v sudo &> /dev/null ]; then
+if [ -z "$(command -v sudo)" ]; then
     echo "'sudo' could not be found, install now..."
     apt update && apt install -y sudo
 fi
